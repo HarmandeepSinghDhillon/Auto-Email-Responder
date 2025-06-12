@@ -7,6 +7,14 @@ import os
 
 app = FastAPI()
 
+@app.get("/auth")
+def authenticate():
+    if not os.path.exists("token.json"):
+        from auth import get_credentials  # Import here to avoid circular imports
+        creds = get_credentials()  # This should trigger the auth flow
+        return {"status": "Authentication successful!"}
+    return {"status": "Already authenticated"}
+
 def get_unreplied_emails():
     creds = get_credentials()
     service = build('gmail', 'v1', credentials=creds)
